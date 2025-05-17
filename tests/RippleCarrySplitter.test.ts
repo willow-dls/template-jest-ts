@@ -6,7 +6,7 @@ let adder: Circuit;
 beforeAll(async () => {
   adder = await loadCircuit(
     CircuitVerseLoader,
-    "tests/RippleCarrySplitter.cv",
+    "circuits/RippleCarrySplitter.cv",
     "4-Bit Ripple-Carry Adder"
   );
 });
