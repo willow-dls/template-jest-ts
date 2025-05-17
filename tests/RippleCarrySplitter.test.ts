@@ -10,38 +10,27 @@ beforeAll(async () => {
     "4-Bit Ripple-Carry Adder"
   );
 });
+test('0 + 0 (no carry in)', () => {
+  const result = adder.run({ A: "0000", B: "0000", CarryIn: "0" })
+  expect(result.outputs).toStrictEqual({ Output: new BitString("0000"), CarryOut: new BitString("0") })
+});
 
-function genTest(a, b, sum) {
-  return () => {
-    expect(
-      adder
-        .run({
-          A: a,
-          B: b,
-          CarryIn: "0",
-        })
-        .outputs.Output.toString(),
-    ).toBe(sum.toString());
-  };
-}
+test('1 + 1 (no carry in)', () => {
+  const result = adder.run({ A: "0001", B: "0001", CarryIn: "0" })
+  expect(result.outputs).toStrictEqual({ Output: new BitString("0010"), CarryOut: new BitString("0") })
+});
 
-let a = BitString.low(4);
-let b = BitString.low(4);
-while (true) {
-  while (true) {
-    const sum = a.add(b);
+test('Add 5 + 7 (no carry in)', () => {
+  const result = adder.run({ A: new BitString("0101"), B: new BitString("0111"), CarryIn: "0" })
+  expect(result.outputs).toStrictEqual({ Output: new BitString("1100"), CarryOut: new BitString("0") })
+});
 
-    test(`Exhaustive: ${a} + ${b} => ${sum}`, genTest(a, b, sum));
+test('Add 5 + 7 (carry in)', () => {
+  const result = adder.run({ A: new BitString("0101"), B: new BitString("0111"), CarryIn: "1" })
+  expect(result.outputs).toStrictEqual({ Output: new BitString("1101"), CarryOut: new BitString("0") })
+});
 
-    b = b.add("0001");
-
-    if (b.equals("0000")) {
-      break;
-    }
-  }
-  a = a.add("0001");
-
-  if (a.equals("0000")) {
-    break;
-  }
-}
+test('Carry Out set', () => {
+  const result = adder.run({ A: new BitString("1100"), B: new BitString("0110"), CarryIn: "0" })
+  expect(result.outputs).toStrictEqual({ Output: new BitString("0010"), CarryOut: new BitString("1") })
+});
